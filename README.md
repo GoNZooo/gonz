@@ -6,7 +6,7 @@
 
 `git clone https://github.com/GoNZooo/gonz.git`
 
-This will create a folder named *gonz* in the location you have issued the command in.
+This will create a folder named `gonz` in the location you have issued the command in.
 
 ### Add the collection to your packages
 
