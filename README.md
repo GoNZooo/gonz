@@ -20,17 +20,17 @@ raco will install the package information and will refer to this directory when 
 
 If you want to use the contents of the package you can do the following:
 
-<code>#lang racket
-
-(require gonz/human-time)
-
-(human-time 5m3s) ; 303</code>
+    #lang racket
+    
+    (require gonz/human-time)
+    
+    (human-time 5m3s) ; 303
 
 or
 
-<code>#lang racket
+    #lang racket
+    
+    (require gonz/list-comprehensions)
+    
+    (<- (- x y) [x '(9 8 7 6)] [y '(1 2 3 4)]) ; '(8 6 4 2)
 
-(require gonz/list-comprehensions)
-
-(<- (- x y) [x '(9 8 7 6)] [y '(1 2 3 4)]) ; '(8 6 4 2)
-</code>
