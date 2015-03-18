@@ -1,6 +1,9 @@
 #lang racket/base
 
-(provide define/tc)
+(provide define/tc
+         define/tc/module
+         (all-from-out rackunit
+                       racket/contract))
 
 (require (for-syntax racket/base
                      racket/syntax
@@ -13,7 +16,7 @@
 ;;; Usage is illustrated below.
 (define-syntax (define/tc stx)
   (syntax-parse stx
-    [(tc (func-name:id arg:id ...)
+    [(tc (func-name:id arg ...)
          contract-spec
          ([(test-input:expr ...) desired-result:expr] ...)
          body:expr ...)
@@ -23,7 +26,7 @@
            body ...)
            (check-equal? (func-name test-input ...) desired-result)
            ...)]
-    [(tc (func-name:id arg:id ...)
+    [(tc (func-name:id arg ...)
          contract-spec
          ([test-input:expr desired-result:expr] ...)
          body:expr ...)
@@ -33,21 +36,45 @@
            body ...)
            (check-equal? (func-name test-input) desired-result)
            ...)]))
+
+(define-syntax (define/tc/module stx)
+  (syntax-parse stx
+    [(tc (func-name:id arg:id ...)
+         contract-spec
+         ([(test-input:expr ...) desired-result:expr] ...)
+         body:expr ...)
+     #'(begin
+         (define/contract (func-name arg ...)
+           contract-spec
+           body ...)
+         (module+ test
+           (check-equal? (func-name test-input ...) desired-result)
+           ...))]
+    [(tc (func-name:id arg:id ...)
+         contract-spec
+         ([test-input:expr desired-result:expr] ...)
+         body:expr ...)
+     #'(begin
+         (define/contract (func-name arg ...)
+           contract-spec
+           body ...)
+         (module+ test
+           (check-equal? (func-name test-input) desired-result) ...))]))
            
+(module+ main
+  (define/tc (square x)
+    (integer? . -> . integer?)
+    
+    ([2 4]
+     [3 9]
+     [5 25])
 
-(define/tc (square x)
-  (integer? . -> . integer?)
-  
-  ([2 4]
-   [3 9]
-   [5 25])
+    (expt x 2))
 
-  (expt x 2))
+  (define/tc (square2&add x y)
+    (integer? integer? . -> . integer?)
 
-(define/tc (square2&add x y)
-  (integer? integer? . -> . integer?)
+    ([(2 3) 13]
+     [(1 2) 5])
 
-  ([(2 3) 13]
-   [(1 2) 5])
-
-  (+ (expt x 2) (expt y 2)))
+    (+ (expt x 2) (expt y 2))))
