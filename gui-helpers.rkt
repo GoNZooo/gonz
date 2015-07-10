@@ -5,12 +5,12 @@
 ;; general would be good for readability as a cost of writability.
 
 (provide event-equal?
-		 msg
-		 hpanel
-		 vpanel
-		 tfield
-		 btn
-		 lbox)
+         msg
+         hpanel
+         vpanel
+         tfield
+         btn
+         lbox)
 
 (require (for-syntax racket/syntax))
 
