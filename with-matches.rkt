@@ -4,22 +4,25 @@
                      racket/syntax
                      syntax/parse))
 
-(provide (for-syntax with-matches))
+(provide with-matches)
 (define-syntax (with-matches stx)
   (define-syntax-class
-    str-lit-or-id
-    #:description "string literal or id for string"
+    str-lit
+    #:description "string literal"
     (pattern s
              #:fail-unless
-             (string? (syntax-e #'s))
-             "s is not string literal/id"))
+             (or (string? (syntax-e #'s))
+                 (symbol? (syntax-e #'s)))
+             "s is not string literal"))
   (syntax-parse stx
-    [(_ rxpattern:str-lit-or-id instring:str-lit-or-id
-       body:expr ...)
-     (with-syntax ([match-recall-id 'm#]
-                   [internal-match-list '*internal-match-list*]))
-     #'(begin
-         (define internal-match-list)
-         (define (match-recall-id n)
-           (list-ref internal-match-list n))
-         body ...)]))
+    [(_ rxpattern:str-lit instring:str-lit
+        body:expr ...)
+     (with-syntax ([match-recall-id (format-id stx
+                                               "~a"
+                                               'm#)]
+                   [internal-match-list '*internal-match-list*])
+       #'(begin
+           (define internal-match-list (regexp-match rxpattern instring))
+           (define (match-recall-id n)
+             (list-ref internal-match-list n))
+           body ...))]))
