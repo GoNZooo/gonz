@@ -12,7 +12,9 @@
     (pattern s
              #:fail-unless
              (or (string? (syntax-e #'s))
-                 (symbol? (syntax-e #'s)))
+                 (symbol? (syntax-e #'s))
+                 (pregexp? (syntax-e #'s))
+                 (regexp? (syntax-e #'s)))
              "s is not string literal"))
   (syntax-parse stx
     [(_ rxpattern:str-lit instring:str-lit
@@ -21,8 +23,22 @@
                                                "~a"
                                                'm#)]
                    [internal-match-list '*internal-match-list*])
-       #'(begin
-           (define internal-match-list (regexp-match rxpattern instring))
-           (define (match-recall-id n)
-             (list-ref internal-match-list n))
+       #'(let* ([internal-match-list (regexp-match rxpattern instring)]
+                [match-recall-id
+                  (lambda (n)
+                    (list-ref internal-match-list n))])
            body ...))]))
+
+(module+ main
+  (define episode-list '("S2E1"
+                         "S2E2"
+                         "S2E3"
+                         "S2E4"
+                         "S2E5"))
+  
+  (map (lambda (episode-string)
+         (with-matches
+           #px"S(\\d)E(\\d)" episode-string
+           (format "S0~aE0~a"
+                   (m# 1) (m# 2))))
+       episode-list))
