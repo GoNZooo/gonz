@@ -4,6 +4,18 @@
                      racket/syntax
                      syntax/parse))
 
+;; The following macro allows you to do submatching against a string
+;; using regexp/pregexp and automatically have submatches available
+;; through (m <submatch-number>) like so:
+;;
+;;     (with-matches #px"(\\d) tests (\\w+)" "4 tests passed"
+;;       (format "~a: ~a" (m 2) (m 1)))
+;;     => "passed: 4"
+;;
+;; It can be described as follows:
+;; (with-matches <regexp with N submatches>
+;;               <string to match against>
+;;   <body using (m N) to refer to submatches> ...)
 (provide with-matches)
 (define-syntax (with-matches stx)
   (define-syntax-class
