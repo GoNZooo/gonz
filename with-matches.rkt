@@ -21,7 +21,7 @@
         body:expr ...)
      (with-syntax ([match-recall-id (format-id stx
                                                "~a"
-                                               'm#)]
+                                               'm)]
                    [internal-match-list '*internal-match-list*])
        #'(let* ([internal-match-list (regexp-match rxpattern instring)]
                 [match-recall-id
@@ -40,5 +40,5 @@
          (with-matches
            #px"S(\\d)E(\\d)" episode-string
            (format "S0~aE0~a"
-                   (m# 1) (m# 2))))
+                   (m 1) (m 2))))
        episode-list))
