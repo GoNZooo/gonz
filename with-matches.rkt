@@ -15,7 +15,7 @@
                  (symbol? (syntax-e #'s))
                  (pregexp? (syntax-e #'s))
                  (regexp? (syntax-e #'s)))
-             "s is not string literal"))
+             "s is not regexp/pregexp literal or id"))
   (syntax-parse stx
     [(_ rxpattern:regexplit instring:regexplit
         body:expr ...)
