@@ -29,16 +29,54 @@
                     (list-ref internal-match-list n))])
            body ...))]))
 
-(module+ main
+(module+ test
+  (require rackunit)
+
   (define episode-list '("S2E1"
                          "S2E2"
                          "S2E3"
                          "S2E4"
                          "S2E5"))
   
-  (map (lambda (episode-string)
-         (with-matches
-           #px"S(\\d)E(\\d)" episode-string
-           (format "S0~aE0~a"
-                   (m 1) (m 2))))
-       episode-list))
+  (check-equal?
+    (map (lambda (episode-string)
+           (with-matches
+             #px"S(\\d)E(\\d)" episode-string
+             (format "S0~aE0~a"
+                     (m 1) (m 2))))
+         episode-list)
+  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+  "Test using pregexp-literal failed")
+
+  (define pregexp-binding (pregexp "S(\\d)E(\\d)"))
+  (check-equal?
+    (map (lambda (episode-string)
+           (with-matches
+             pregexp-binding episode-string
+             (format "S0~aE0~a"
+                     (m 1) (m 2))))
+         episode-list)
+  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+  "Test using pregexp-binding failed")
+
+  (check-equal?
+    (map (lambda (episode-string)
+           (with-matches
+             #rx"S([0-9])E([0-9])" episode-string
+             (format "S0~aE0~a"
+                     (m 1) (m 2))))
+         episode-list)
+  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+  "Test using regexp-literal failed")
+
+  (define regexp-binding (regexp "S([0-9])E([0-9])"))
+  (check-equal?
+    (map (lambda (episode-string)
+           (with-matches
+             pregexp-binding episode-string
+             (format "S0~aE0~a"
+                     (m 1) (m 2))))
+         episode-list)
+  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+  "Test using regexp-binding failed")
+  )
