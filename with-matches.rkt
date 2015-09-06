@@ -7,8 +7,8 @@
 (provide with-matches)
 (define-syntax (with-matches stx)
   (define-syntax-class
-    str-lit
-    #:description "string literal"
+    regexplit
+    #:description "regexp/pregexp literal or id"
     (pattern s
              #:fail-unless
              (or (string? (syntax-e #'s))
@@ -17,7 +17,7 @@
                  (regexp? (syntax-e #'s)))
              "s is not string literal"))
   (syntax-parse stx
-    [(_ rxpattern:str-lit instring:str-lit
+    [(_ rxpattern:regexplit instring:regexplit
         body:expr ...)
      (with-syntax ([match-recall-id (format-id stx
                                                "~a"
