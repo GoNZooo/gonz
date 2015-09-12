@@ -6,13 +6,15 @@
 
 `git clone https://github.com/GoNZooo/gonz.git`
 
-This will create a folder named `gonz` in the location you have issued the command in.
+This will create a folder named `gonz` in the location you have issued the
+command in.
 
 ### Add the collection to your packages
 
 `raco pkg install --link absolute-path-to-gonz-folder`
 
-raco will install the package information and will refer to this directory when you use the package
+raco will install the package information and will refer to this directory when
+you use the package.
 
 ([Click here](http://docs.racket-lang.org/guide/module-basics.html?q=collections#%28part._link-collection%29) to see alternative ways to add collections.)
 
