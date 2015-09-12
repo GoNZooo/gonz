@@ -38,7 +38,13 @@
        #'(let* ([internal-match-list (regexp-match rxpattern instring)]
                 [match-recall-id
                   (lambda (n)
-                    (list-ref internal-match-list n))])
+                    (if (>= n
+                            (length internal-match-list))
+                      (raise-syntax-error 'sub-match-index
+                                          "Sub-match index needs to match number of submatches in regular expression"
+                                          #'with-matches
+                                          #'match-recall-id)
+                      (list-ref internal-match-list n)))])
            body ...))]))
 
 (module+ test
@@ -49,7 +55,7 @@
                          "S2E3"
                          "S2E4"
                          "S2E5"))
-  
+
   (check-equal?
     (map (lambda (episode-string)
            (with-matches
@@ -57,8 +63,8 @@
              (format "S0~aE0~a"
                      (m 1) (m 2))))
          episode-list)
-  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-  "Test using pregexp-literal failed")
+    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+    "Test using pregexp-literal failed")
 
   (define pregexp-binding (pregexp "S(\\d)E(\\d)"))
   (check-equal?
@@ -68,8 +74,8 @@
              (format "S0~aE0~a"
                      (m 1) (m 2))))
          episode-list)
-  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-  "Test using pregexp-binding failed")
+    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+    "Test using pregexp-binding failed")
 
   (check-equal?
     (map (lambda (episode-string)
@@ -78,8 +84,8 @@
              (format "S0~aE0~a"
                      (m 1) (m 2))))
          episode-list)
-  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-  "Test using regexp-literal failed")
+    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+    "Test using regexp-literal failed")
 
   (define regexp-binding (regexp "S([0-9])E([0-9])"))
   (check-equal?
@@ -89,6 +95,6 @@
              (format "S0~aE0~a"
                      (m 1) (m 2))))
          episode-list)
-  '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-  "Test using regexp-binding failed")
+    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+    "Test using regexp-binding failed")
   )
