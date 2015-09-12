@@ -10,7 +10,7 @@ This will create a folder named `gonz` in the location you have issued the comma
 
 ### Add the collection to your packages
 
-`raco pkg install --link ./gonz`
+`raco pkg install --link absolute-path-to-gonz-folder`
 
 raco will install the package information and will refer to this directory when you use the package
 
