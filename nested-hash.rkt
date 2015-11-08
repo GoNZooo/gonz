@@ -8,16 +8,19 @@
 
 ; (hash-ref h 'foo 'bar) => (hash-ref (hash-ref h 'foo) 'bar)
 
-(define (chain-keys h keys [fail 'no-fail])
-  (if (null? keys)
-    h
-    (if (equal? fail 'no-fail)
-      (chain-keys (hash-ref h (car keys))
+(define (chain-keys h keys [fail? 'no-fail])
+  (cond
+    [(null? keys) h]
+    [(equal? fail? 'no-fail)
+     (chain-keys (hash-ref h (car keys))
+                 (cdr keys)
+                 fail?)]
+    [(not (hash-has-key? h (car keys)))
+     fail?]
+    [else
+      (chain-keys (hash-ref h (car keys) fail?)
                   (cdr keys)
-                  fail)
-      (chain-keys (hash-ref h (car keys) fail)
-                  (cdr keys)
-                  fail))))
+                  fail?)]))
 
 (define-syntax (hash-ref* stx)
   (syntax-parse stx
@@ -29,4 +32,4 @@
 (module+ main
   (define h '#hash((foo . #hash((bar . 10)))))
   
-  (hash-ref* h 'foo 'baar #:fail? ""))
+  (hash-ref* h 'foo 'baar 'baz #:fail? 'fail-symbol))
