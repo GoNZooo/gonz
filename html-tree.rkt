@@ -25,18 +25,22 @@
              (find* exprs element-type))]
     [(list expr exprs ...)
      #:when (equal? element-type expr)
-     (append `((,expr ,exprs)) (find* exprs element-type))]
+     (append `(,(cons expr exprs)) (find* exprs element-type))]
     [(list expr exprs ...)
      (find* exprs element-type)]))
 
 (module+ main
+  (require racket/pretty)
   (define page-xexpr (url->xexprs "http://severnatazvezda.com/github/"))
-  ;; Finds all links on a page
-  (find* page-xexpr
-         'a)
+  (pretty-print 
+    ;; Finds all links on a page
+    (find* page-xexpr
+           'a))
   ;; Finds all divs on a page
-  (find* page-xexpr
-         'div)
-  ;; Finds all hrefs on a page
-  (find* page-xexpr
-         'href))
+  (pretty-print 
+    (find* page-xexpr
+           'div)))
+  ;;; Finds all hrefs on a page
+  ;(pretty-print
+  ;  (find* page-xexpr
+  ;         'href)))
