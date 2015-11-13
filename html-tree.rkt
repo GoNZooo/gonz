@@ -30,7 +30,7 @@
      (find* exprs element-type)]))
 
 (module+ main
-  (define page-xexpr (url->xexprs "http://severnatazvezda.com/text/"))
+  (define page-xexpr (url->xexprs "http://severnatazvezda.com/github/"))
   ;; Finds all links on a page
   (find* page-xexpr
          'a)
