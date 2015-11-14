@@ -18,24 +18,47 @@
 ;;   <body using (m N) to refer to submatches> ...)
 (provide with-matches)
 (define-syntax (with-matches stx)
+  (define-syntax-class
+    regexplit
+    #:description "regexp/pregexp literal or id"
+    (pattern s
+             #:fail-unless
+             (or (string? (syntax-e #'s))
+                 (symbol? (syntax-e #'s))
+                 (pregexp? (syntax-e #'s))
+                 (regexp? (syntax-e #'s)))
+             "s is not regexp/pregexp literal or id"))
   (syntax-parse stx
-    [(_ rxpattern:expr instring:regexplit
+    [(_ rxpattern:expr instring:expr
         body:expr ...)
      (with-syntax ([match-recall-id (format-id stx
                                                "~a"
                                                'm)]
                    [internal-match-list '*internal-match-list*])
-       #'(let* ([internal-match-list (regexp-match rxpattern instring)]
-                [match-recall-id
-                  (lambda (n)
-                    (if (>= n
-                            (length internal-match-list))
-                      (raise-syntax-error 'sub-match-index
-                                          "Sub-match index needs to match number of submatches in regular expression"
-                                          #'with-matches
-                                          #'match-recall-id)
-                      (list-ref internal-match-list n)))])
-           body ...))]))
+       #'(cond
+            [(not (string? instring))
+             (raise-syntax-error 'instring-not-string
+                                 "Needs string to search in"
+                                 #'with-matches
+                                 #'instring)]
+            [(not (or (pregexp? rxpattern)
+                      (regexp? rxpattern)))
+             (raise-syntax-error 'not-regexp-or-string
+                                 "Needs regexp or pregexp"
+                                 #'with-matches
+                                 #'rxpattern)]
+            [else
+              (let* ([internal-match-list (regexp-match rxpattern instring)]
+                     [match-recall-id
+                       (lambda (n)
+                         (if (>= n
+                                 (length internal-match-list))
+                           (raise-syntax-error 'sub-match-index
+                                               "Sub-match index needs to match number of submatches in regular expression"
+                                               #'with-matches
+                                               #'match-recall-id)
+                           (list-ref internal-match-list n)))])
+                body ...)]))]))
 
 (module+ test
   (require rackunit)
