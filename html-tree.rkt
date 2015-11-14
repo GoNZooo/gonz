@@ -5,9 +5,7 @@
          html
          net/url)
 
-(permissive-xexprs #t)
-
-;; (-> string? xexpr?)
+; (-> string? (listof xexpr?))
 (provide url->xexprs)
 (define (url->xexprs base-url)
   (map xml->xexpr
@@ -15,7 +13,7 @@
                        get-pure-port
                        read-html-as-xml)))
 
-;; (-> xexpr? symbol? xexpr?)
+;; (-> (listof xexpr?) symbol? (listof xexpr?))
 (provide find*)
 (define (find* root element-type)
   (match root
@@ -36,10 +34,11 @@
     ;; Finds all links on a page
     (find* page-xexpr
            'a))
+  (pretty-print (xexpr? page-xexpr)))
   ;; Finds all divs on a page
-  (pretty-print 
-    (find* page-xexpr
-           'div)))
+  ;(pretty-print 
+  ;  (find* page-xexpr
+  ;         'div)))
   ;;; Finds all hrefs on a page
   ;(pretty-print
   ;  (find* page-xexpr
