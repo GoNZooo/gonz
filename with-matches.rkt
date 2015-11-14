@@ -18,18 +18,8 @@
 ;;   <body using (m N) to refer to submatches> ...)
 (provide with-matches)
 (define-syntax (with-matches stx)
-  (define-syntax-class
-    regexplit
-    #:description "regexp/pregexp literal or id"
-    (pattern s
-             #:fail-unless
-             (or (string? (syntax-e #'s))
-                 (symbol? (syntax-e #'s))
-                 (pregexp? (syntax-e #'s))
-                 (regexp? (syntax-e #'s)))
-             "s is not regexp/pregexp literal or id"))
   (syntax-parse stx
-    [(_ rxpattern:regexplit instring:regexplit
+    [(_ rxpattern:expr instring:regexplit
         body:expr ...)
      (with-syntax ([match-recall-id (format-id stx
                                                "~a"
