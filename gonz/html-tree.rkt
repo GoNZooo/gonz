@@ -34,7 +34,7 @@
     ;; Finds all links on a page
     (find* page-xexpr
            'a))
-  (pretty-print (xexpr? page-xexpr)))
+  (pretty-print (xexpr? (car page-xexpr))))
   ;; Finds all divs on a page
   ;(pretty-print 
   ;  (find* page-xexpr

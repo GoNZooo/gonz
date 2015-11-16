@@ -4,8 +4,8 @@
 
 (require/typed/provide
   gonz/html-tree
-  [url->xexprs (-> String (Listof Xexpr))]
-  [find* (-> (U Null (Listof Xexpr)) Symbol (Listof Xexpr))])
+  [url->xexprs (-> String (U Xexpr (Listof Xexpr)))]
+  [find* (-> (U Null (U Xexpr (Listof Xexpr))) Symbol (Listof Xexpr))])
 
 (module+ main
   (find* (url->xexprs "http://severnatazvezda.com/github/") 'a))

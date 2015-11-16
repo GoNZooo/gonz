@@ -1,4 +1,8 @@
+doc/*
+gonz/doc/*
 *~
 compiled/*
+gonz/compiled/*
+gonz/typed/compiled/*
 *.session
 *.swp

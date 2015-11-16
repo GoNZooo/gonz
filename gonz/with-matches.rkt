@@ -1,6 +1,7 @@
-#lang racket/base
+#lang at-exp racket/base
 
-(require (for-syntax racket/base
+(require racket/contract
+         (for-syntax racket/base
                      racket/syntax
                      syntax/parse))
 
@@ -18,16 +19,6 @@
 ;;   <body using (m N) to refer to submatches> ...)
 (provide with-matches)
 (define-syntax (with-matches stx)
-  (define-syntax-class
-    regexplit
-    #:description "regexp/pregexp literal or id"
-    (pattern s
-             #:fail-unless
-             (or (string? (syntax-e #'s))
-                 (symbol? (syntax-e #'s))
-                 (pregexp? (syntax-e #'s))
-                 (regexp? (syntax-e #'s)))
-             "s is not regexp/pregexp literal or id"))
   (syntax-parse stx
     [(_ rxpattern:expr instring:expr
         body:expr ...)
@@ -58,7 +49,10 @@
                                                #'with-matches
                                                #'match-recall-id)
                            (list-ref internal-match-list n)))])
-                body ...)]))]))
+                (if (equal? #f internal-match-list)
+                  (error "No matches in pattern")
+                  (begin
+                    body ...)))]))]))
 
 (module+ test
   (require rackunit)
