@@ -27,29 +27,29 @@
                                                'm)]
                    [internal-match-list '*internal-match-list*])
        #'(cond
-            [(not (string? instring))
-             (raise-syntax-error 'instring-not-string
-                                 "Needs string to search in"
-                                 #'with-matches
-                                 #'instring)]
-            [(not (or (pregexp? rxpattern)
-                      (regexp? rxpattern)))
-             (raise-syntax-error 'not-regexp-or-string
-                                 "Needs regexp or pregexp"
-                                 #'with-matches
-                                 #'rxpattern)]
-            [else
-              (let* ([internal-match-list (regexp-match rxpattern instring)]
-                     [match-recall-id
-                       (lambda (n)
-                         (if (>= n
-                                 (length internal-match-list))
-                           (raise-syntax-error 'sub-match-index
-                                               "Sub-match index needs to match number of submatches in regular expression"
-                                               #'with-matches
-                                               #'match-recall-id)
-                           (list-ref internal-match-list n)))])
-                (if (equal? #f internal-match-list)
+           [(not (string? instring))
+            (raise-syntax-error 'instring-not-string
+                                "Needs string to search in"
+                                #'with-matches
+                                #'instring)]
+           [(not (or (pregexp? rxpattern)
+                     (regexp? rxpattern)))
+            (raise-syntax-error 'not-regexp-or-string
+                                "Needs regexp or pregexp"
+                                #'with-matches
+                                #'rxpattern)]
+           [else
+            (let* ([internal-match-list (regexp-match rxpattern instring)]
+                   [match-recall-id
+                    (lambda (n)
+                      (if (>= n
+                              (length internal-match-list))
+                          (raise-syntax-error 'sub-match-index
+                                              "Sub-match index needs to match number of submatches in regular expression"
+                                              #'with-matches
+                                              #'match-recall-id)
+                          (list-ref internal-match-list n)))])
+              (if (equal? #f internal-match-list)
                   (error "No matches in pattern")
                   (begin
                     body ...)))]))]))
@@ -64,44 +64,44 @@
                          "S2E5"))
 
   (check-equal?
-    (map (lambda (episode-string)
-           (with-matches
-             #px"S(\\d)E(\\d)" episode-string
-             (format "S0~aE0~a"
-                     (m 1) (m 2))))
-         episode-list)
-    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-    "Test using pregexp-literal failed")
+   (map (lambda (episode-string)
+          (with-matches
+            #px"S(\\d)E(\\d)" episode-string
+            (format "S0~aE0~a"
+                    (m 1) (m 2))))
+        episode-list)
+   '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+   "Test using pregexp-literal failed")
 
   (define pregexp-binding (pregexp "S(\\d)E(\\d)"))
   (check-equal?
-    (map (lambda (episode-string)
-           (with-matches
-             pregexp-binding episode-string
-             (format "S0~aE0~a"
-                     (m 1) (m 2))))
-         episode-list)
-    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-    "Test using pregexp-binding failed")
+   (map (lambda (episode-string)
+          (with-matches
+            pregexp-binding episode-string
+            (format "S0~aE0~a"
+                    (m 1) (m 2))))
+        episode-list)
+   '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+   "Test using pregexp-binding failed")
 
   (check-equal?
-    (map (lambda (episode-string)
-           (with-matches
-             #rx"S([0-9])E([0-9])" episode-string
-             (format "S0~aE0~a"
-                     (m 1) (m 2))))
-         episode-list)
-    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-    "Test using regexp-literal failed")
+   (map (lambda (episode-string)
+          (with-matches
+            #rx"S([0-9])E([0-9])" episode-string
+            (format "S0~aE0~a"
+                    (m 1) (m 2))))
+        episode-list)
+   '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+   "Test using regexp-literal failed")
 
   (define regexp-binding (regexp "S([0-9])E([0-9])"))
   (check-equal?
-    (map (lambda (episode-string)
-           (with-matches
-             pregexp-binding episode-string
-             (format "S0~aE0~a"
-                     (m 1) (m 2))))
-         episode-list)
-    '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
-    "Test using regexp-binding failed")
+   (map (lambda (episode-string)
+          (with-matches
+            pregexp-binding episode-string
+            (format "S0~aE0~a"
+                    (m 1) (m 2))))
+        episode-list)
+   '("S02E01" "S02E02" "S02E03" "S02E04" "S02E05")
+   "Test using regexp-binding failed")
   )
