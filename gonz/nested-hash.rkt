@@ -18,9 +18,9 @@
     [(not (hash-has-key? h (car keys)))
      fail?]
     [else
-      (chain-keys (hash-ref h (car keys) fail?)
-                  (cdr keys)
-                  fail?)]))
+     (chain-keys (hash-ref h (car keys) fail?)
+                 (cdr keys)
+                 fail?)]))
 
 (define-syntax (hash-ref* stx)
   (syntax-parse stx
@@ -31,5 +31,5 @@
 
 (module+ main
   (define h '#hash((foo . #hash((bar . 10)))))
-  
+
   (hash-ref* h 'foo 'baar 'baz #:fail? 'fail-symbol))

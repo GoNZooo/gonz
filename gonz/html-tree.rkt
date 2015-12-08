@@ -31,15 +31,15 @@
   (require racket/pretty)
   (define page-xexpr (url->xexprs "http://severnatazvezda.com/github/"))
   (pretty-print 
-    ;; Finds all links on a page
-    (find* page-xexpr
-           'a))
+   ;; Finds all links on a page
+   (find* page-xexpr
+          'a))
   (pretty-print (xexpr? (car page-xexpr))))
-  ;; Finds all divs on a page
-  ;(pretty-print 
-  ;  (find* page-xexpr
-  ;         'div)))
+;; Finds all divs on a page
+;(pretty-print 
+;  (find* page-xexpr
+;         'div)))
   ;;; Finds all hrefs on a page
-  ;(pretty-print
-  ;  (find* page-xexpr
-  ;         'href)))
+;(pretty-print
+;  (find* page-xexpr
+;         'href)))

@@ -11,20 +11,20 @@
     (define (get-hours)
       (let ([r (regexp-match #px"(\\d*)[Hh]" time-spec)])
         (if (not r)
-          0
-          (string->number (list-ref r 1)))))
+            0
+            (string->number (list-ref r 1)))))
 
     (define (get-minutes)
       (let ([r (regexp-match #px"(\\d*)[Mm]" time-spec)])
         (if (not r)
-          0
-          (string->number (list-ref r 1)))))
+            0
+            (string->number (list-ref r 1)))))
 
     (define (get-seconds)
       (let ([r (regexp-match #px"(\\d*)[Ss]" time-spec)])
         (if (not r)
-          0
-          (string->number (list-ref r 1)))))
+            0
+            (string->number (list-ref r 1)))))
 
     (+ (* (get-hours) 3600)
        (* (get-minutes) 60)

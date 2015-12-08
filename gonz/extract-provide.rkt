@@ -6,9 +6,9 @@
 
 (define/contract (module->exported-functions/pattern module-name)
   (symbol? . -> . (listof symbol?))
-  
+
   (dynamic-require module-name #f)
-  
+
   (define-values (m1 m2)
     (module->exports module-name))
 
@@ -25,7 +25,7 @@
        (extract-ids es
                     (cons exported-id
                           output))]))
-  
+
   (append (extract-ids m1)
           (extract-ids m2)))
 
@@ -44,13 +44,13 @@
      (subset big small)]
     [(mirrored?)
      (subset (cdr small)
-                    big
-                    (cons (car small)
-                          output))]
+             big
+             (cons (car small)
+                   output))]
     [else
-      (subset (cdr small)
-                     big
-                     output)]))
+     (subset (cdr small)
+             big
+             output)]))
 
 (module+ main
   (require racket/pretty)
